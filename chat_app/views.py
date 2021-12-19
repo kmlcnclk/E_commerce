@@ -23,8 +23,10 @@ from .models import MessageModel
 import os
 import base64
 
-
+from django.views.csrf import csrf_failure
 # bunu imagelara yap
+
+
 class A(generics.CreateAPIView):
     authentication_classes = []
     permission_classes = []
@@ -69,12 +71,13 @@ def send_mail(html=None, text='Email_body', subject='Hello word', from_email='',
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-@authentication_classes([])
+@authentication_classes([SessionAuthentication])
 @permission_classes([])
 # @ensure_csrf_cookie
 @csrf_protect
 def reset_password(req):
     a = req.COOKIES.get('csrftoken')
+    # a = csrf_protect(req)
     # print(request.method)
     # if request.method == 'POST':
     #     reqbody = json.loads(request.body)
