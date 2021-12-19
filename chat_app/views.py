@@ -110,8 +110,8 @@ def reset_password(req):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @authentication_classes([SessionAuthentication])
 @permission_classes([])
-@ensure_csrf_cookie
-# @csrf_protect
+# @ensure_csrf_cookie
+@csrf_protect
 def reset_passworda(req):
     a = req.COOKIES.get('csrftoken')
     # a = csrf_protect(req)
