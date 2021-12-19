@@ -1,8 +1,17 @@
+from rest_framework.authentication import SessionAuthentication
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
+import random
+import json
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from datetime import datetime
 from rest_framework import status
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 import jwt
 from django.conf import settings
 from django.core.exceptions import BadRequest
@@ -11,20 +20,88 @@ from chat_app.serializers import MessageSerializer
 from Users.models import User
 from .models import MessageModel
 # Create your views here.
-
+import os
 import base64
 
 
 # bunu imagelara yap
 class A(generics.CreateAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = None
+
     def post(self, req):
         image = req.FILES.get('image')
         a = str(base64.b64encode(image.read()))
         name = image.name.split('.')[1]
         b = a.split("b'")[1].replace("'", "")
+
         return Response(
             f"data:image/{name};base64,{b}"
         )
+
+
+def send_mail(html=None, text='Email_body', subject='Hello word', from_email='', to_emails=[]):
+    assert isinstance(to_emails, list)
+    username = 'memethsana24@gmail.com'
+    password = 'mh2424..'
+    msg = MIMEMultipart('alternative')
+    msg['From'] = from_email
+    msg['To'] = ", ".join(to_emails)
+    msg['Subject'] = subject
+    txt_part = MIMEText(text, 'plain')
+    msg.attach(txt_part)
+
+    html_part = MIMEText(
+        f"<p>Here is your password reset token</p><h1>{html}</h1>", 'html')
+    msg.attach(html_part)
+    msg_str = msg.as_string()
+
+    server = smtplib.SMTP(host='smtp.gmail.com', port=587)
+
+    server.ehlo()
+    print('sa')
+
+    server.starttls()
+    server.login(username, password)
+    server.sendmail(from_email, to_emails, msg_str)
+    server.quit()
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@authentication_classes([])
+@permission_classes([])
+# @ensure_csrf_cookie
+@csrf_protect
+def reset_password(req):
+    a = req.COOKIES.get('csrftoken')
+    # print(request.method)
+    # if request.method == 'POST':
+    #     reqbody = json.loads(request.body)
+    #     token_recieved = reqbody['token']
+    #     password = reqbody['password']
+    #     password_again = reqbody['password2']
+    #     print(request.user)
+    #     used = User.objects.get(id=request.user.id)
+
+    #     if token_recieved != used.random_integer:
+    #         return Response('Invalid Token')
+
+    #     if password != password_again:
+    #         return Response('Passwords should match')
+    #     used.random_integer = None
+    #     used.save()
+    #     return Response('Password changed successfully')
+
+    # token1 = random.randint(100000, 999999)
+    # # print(request.user.email)
+    # # used = User.objects.get(id=request.user.id)
+    # # used.random_integer = token1
+    # # used.save()
+    # send_mail(html=token1, text='Here is your password reset token',
+    #           subject='password reset token', from_email='20212675@std.neu.edu.tr', to_emails=['20212675@std.neu.edu.tr'])
+
+    return Response(a)
 
 
 class SendMessage(generics.CreateAPIView):

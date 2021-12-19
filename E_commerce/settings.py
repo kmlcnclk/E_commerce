@@ -32,6 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+# DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -203,7 +204,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAdminUser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -237,6 +239,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_NAME = 'X-CSRFToken'
 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
