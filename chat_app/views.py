@@ -107,6 +107,43 @@ def reset_password(req):
     return Response(a)
 
 
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([])
+@ensure_csrf_cookie
+# @csrf_protect
+def reset_passworda(req):
+    a = req.COOKIES.get('csrftoken')
+    # a = csrf_protect(req)
+    # print(request.method)
+    # if request.method == 'POST':
+    #     reqbody = json.loads(request.body)
+    #     token_recieved = reqbody['token']
+    #     password = reqbody['password']
+    #     password_again = reqbody['password2']
+    #     print(request.user)
+    #     used = User.objects.get(id=request.user.id)
+
+    #     if token_recieved != used.random_integer:
+    #         return Response('Invalid Token')
+
+    #     if password != password_again:
+    #         return Response('Passwords should match')
+    #     used.random_integer = None
+    #     used.save()
+    #     return Response('Password changed successfully')
+
+    # token1 = random.randint(100000, 999999)
+    # # print(request.user.email)
+    # # used = User.objects.get(id=request.user.id)
+    # # used.random_integer = token1
+    # # used.save()
+    # send_mail(html=token1, text='Here is your password reset token',
+    #           subject='password reset token', from_email='20212675@std.neu.edu.tr', to_emails=['20212675@std.neu.edu.tr'])
+
+    return Response(a)
+
+
 class SendMessage(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
