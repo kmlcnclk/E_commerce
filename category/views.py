@@ -22,14 +22,14 @@ class CreateView(generics.CreateAPIView):
     serializer_class = CategorySerializer
     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
 
-    # name = openapi.Parameter('name', openapi.IN_FORM,
-    #                          type=openapi.TYPE_STRING, required=True)
-    # image = openapi.Parameter('image', openapi.IN_FORM,
-    #                           type=openapi.TYPE_FILE, required=True)
+    name = openapi.Parameter('name', openapi.IN_FORM,
+                             type=openapi.TYPE_STRING, required=True)
+    image = openapi.Parameter('image', openapi.IN_FORM,
+                              type=openapi.TYPE_FILE, required=True)
 
-    # @swagger_auto_schema(
-    #     manual_parameters=[name, image]
-    # )
+    @swagger_auto_schema(
+        manual_parameters=[name, image]
+    )
     def post(self, req):
         name = req.data.get('name')
         image = req.FILES.get('image')
