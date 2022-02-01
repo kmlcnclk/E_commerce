@@ -20,7 +20,7 @@ class CreateView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
     authentication_classes = [JWTAuthentication]
     serializer_class = CategorySerializer
-    # parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
 
     # name = openapi.Parameter('name', openapi.IN_FORM,
     #                          type=openapi.TYPE_STRING, required=True)
